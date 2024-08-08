@@ -1,7 +1,7 @@
 import { Role } from "@/api/users/model";
 import { type Document, Schema, type Types, model } from "mongoose";
 
-interface IWorkspace extends Document {
+interface Workspace extends Document {
   name: string;
   company: Types.ObjectId;
   users: {
@@ -10,7 +10,7 @@ interface IWorkspace extends Document {
   }[];
 }
 
-const WorkspaceSchema = new Schema<IWorkspace>({
+const WorkspaceSchema = new Schema<Workspace>({
   name: { type: String, required: true },
   company: { type: Schema.Types.ObjectId, ref: "Company", required: true },
   users: [
@@ -21,4 +21,4 @@ const WorkspaceSchema = new Schema<IWorkspace>({
   ],
 });
 
-export const Workspace = model<IWorkspace>("Workspace", WorkspaceSchema);
+export const Workspace = model<Workspace>("Workspace", WorkspaceSchema);

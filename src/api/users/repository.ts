@@ -1,23 +1,34 @@
-import { User } from "./model";
+import { logger } from "@/server";
+import { type IUser, User } from "./model";
 
 export class UserRepository {
-  async create(user: User) {
-    return User.create(user);
+  async create(user: IUser) {
+    try {
+      const newUser = await User.create(user);
+      return newUser;
+    } catch (error) {
+      logger.error(`Error creating user: ${error}`);
+      return null;
+    }
   }
 
   async findOneByEmail(email: string) {
-    return User.findOne({ email }).populate("company").populate("workspaces.workspace");
+    try {
+      const user = User.findOne({ email }).populate("Company");
+      return user;
+    } catch (error) {
+      logger.error(`Error finding user by email: ${error}`);
+      return null;
+    }
   }
 
   async findOneById(id: string) {
-    return User.findById(id).populate("company").populate("workspaces.workspace");
-  }
-
-  async updateOneById(id: string, user: Partial<User>) {
-    return User.findByIdAndUpdate(id, user, { new: true }).populate("company").populate("workspaces.workspace");
-  }
-
-  async deleteOneById(id: string) {
-    return User.findByIdAndDelete(id);
+    try {
+      const user = User.findById(id).populate("Company");
+      return user;
+    } catch (error) {
+      logger.error(`Error finding user by id: ${error}`);
+      return null;
+    }
   }
 }

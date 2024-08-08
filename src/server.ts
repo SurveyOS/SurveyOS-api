@@ -5,11 +5,13 @@ import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import { healthCheckRouter } from "@/api/health/router";
-import { userRouter } from "@/api/users/router";
+import { authRouter, userRouter } from "@/api/users/router";
+import passport from "@/common/config/passport";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
+import session from "express-session";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
@@ -27,9 +29,21 @@ app.use(rateLimiter);
 // Request logging
 app.use(requestLogger);
 
+app.use(
+  session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
+app.use("/auth", authRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

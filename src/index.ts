@@ -1,4 +1,4 @@
-import Database from "@/common/database/connection";
+import Database from "@/common/config/database";
 import { env } from "@/common/utils/envConfig";
 import { app, logger } from "@/server";
 
