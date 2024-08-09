@@ -41,9 +41,7 @@ export const QuestionZodSchema = z.object({
 
 
 // Schema for updates
-export const UpdateQuestionSchema = QuestionZodSchema.partial().extend({
-    _id: z.string().uuid(), // Ensure `_id` is provided for updates
-  });
+export const UpdateQuestionSchema = QuestionZodSchema.omit({ _id: true });
 
 // Schema for deletion
 export const DeleteQuestionSchema = z.object({

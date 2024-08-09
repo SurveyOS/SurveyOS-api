@@ -6,7 +6,11 @@ import { pino } from "pino";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
 import { userRouter } from "@/api/user/userRouter";
-import errorHandler from "@/common/middleware/errorHandler";
+import questionRoutes  from "@/api/question/router";
+import { surveyRoutes } from "@/api/survey/router";
+import { themeRoutes } from "@/api/theme/router";
+
+import { errorMiddleware } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
@@ -30,11 +34,14 @@ app.use(requestLogger);
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
+app.use("/question", questionRoutes);
+app.use("/survey", surveyRoutes);
+app.use("/theme", themeRoutes);
 
 // Swagger UI
 app.use(openAPIRouter);
 
 // Error handlers
-app.use(errorHandler());
+app.use(errorMiddleware);
 
 export { app, logger };

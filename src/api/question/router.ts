@@ -31,3 +31,4 @@ questionRouter.post("/create", validateRequest(CreateQuestionSchema), questionCo
 questionRouter.put("/:id",validateRequest(UpdateQuestionSchema), questionController.updateQuestion);
 questionRouter.post("/copy/:id", validateRequest(UpdateQuestionSchema), questionController.copyQuestion);
 
+export default questionRouter;
