@@ -4,11 +4,15 @@ import helmet from "helmet";
 import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
+import questionRoutes  from "@/api/question/router";
+import {surveyRouter} from "@/api/survey/router";
+import {themeRouter} from "@/api/theme/router";
+
+import { errorMiddleware } from "@/common/middleware/errorHandler";
 import { companyRouter } from "@/api/company/router";
 import { healthCheckRouter } from "@/api/health/router";
 import { authRouter, userRouter } from "@/api/users/router";
 import passport from "@/common/config/passport";
-import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
@@ -44,6 +48,9 @@ app.use(passport.session());
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
+app.use("/question", questionRoutes);
+app.use("/survey", surveyRouter);
+app.use("/theme", themeRouter);
 app.use("/company", companyRouter);
 app.use("/auth", authRouter);
 
@@ -51,6 +58,6 @@ app.use("/auth", authRouter);
 app.use(openAPIRouter);
 
 // Error handlers
-app.use(errorHandler());
+app.use(errorMiddleware);
 
 export { app, logger };

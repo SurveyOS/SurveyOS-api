@@ -11,10 +11,13 @@ module.exports = {
     "src/**/*.{ts,tsx}",
     "!src/**/*.d.ts",
   ],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
   coverageDirectory: '../coverage',
   modulePaths: ["<rootDir>/src/"],
   moduleDirectories: ["node_modules", "src", __dirname],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1"
-  }
+  },
 };
