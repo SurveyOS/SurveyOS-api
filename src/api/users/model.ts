@@ -54,10 +54,10 @@ export const UserSchema = z.object({
   googleId: z.string().nullable(),
   avatar: z.string().nullable(),
   provider: z.nativeEnum(Provider),
-  company: z.string().uuid().nullable(),
+  company: z.string().nullable(),
   workspaces: z.array(
     z.object({
-      workspace: z.string().uuid(),
+      workspace: z.string(),
       role: z.nativeEnum(Role),
     }),
   ),
@@ -70,7 +70,7 @@ export const CreateUserSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(8),
-    company: z.string().uuid().nullable().optional(),
+    company: z.string().nullable().optional(),
   }),
 });
 

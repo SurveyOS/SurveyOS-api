@@ -14,6 +14,12 @@ class UserService {
 
   async create(user: IUser): Promise<ServiceResponse<IUser | null>> {
     try {
+      const existingUser = await this.findOneByEmail(user.email);
+
+      if (existingUser.success) {
+        return ServiceResponse.failure("User already exists", null, StatusCodes.CONFLICT);
+      }
+
       if (!user.password) {
         return ServiceResponse.failure("Password is required", null, StatusCodes.BAD_REQUEST);
       }
@@ -66,16 +72,16 @@ class UserService {
     try {
       const userResponse = await this.findOneByEmail(email);
       if (!userResponse.success || !userResponse.response) {
-        return ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure("Invalid credentials", null, StatusCodes.BAD_REQUEST);
       }
 
       if (!userResponse.response.password) {
-        return ServiceResponse.failure("Login with google to continue", null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure("Login with google to continue", null, StatusCodes.BAD_REQUEST);
       }
 
       const isPasswordValid = await comparePasswords(password, userResponse.response.password);
       if (!isPasswordValid) {
-        return ServiceResponse.failure("Invalid credentials", null, StatusCodes.UNAUTHORIZED);
+        return ServiceResponse.failure("Invalid credentials", null, StatusCodes.BAD_REQUEST);
       }
 
       const token = generateJWT(userResponse.response);

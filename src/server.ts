@@ -4,6 +4,7 @@ import helmet from "helmet";
 import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
+import { companyRouter } from "@/api/company/router";
 import { healthCheckRouter } from "@/api/health/router";
 import { authRouter, userRouter } from "@/api/users/router";
 import passport from "@/common/config/passport";
@@ -43,6 +44,7 @@ app.use(passport.session());
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
+app.use("/company", companyRouter);
 app.use("/auth", authRouter);
 
 // Swagger UI

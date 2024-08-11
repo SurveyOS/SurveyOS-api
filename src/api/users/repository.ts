@@ -4,7 +4,7 @@ import { type IUser, User } from "./model";
 export class UserRepository {
   async create(user: IUser) {
     try {
-      const newUser = await User.create(user);
+      const newUser = await user.save();
       return newUser;
     } catch (error) {
       logger.error(`Error creating user: ${error}`);
@@ -14,7 +14,7 @@ export class UserRepository {
 
   async findOneByEmail(email: string) {
     try {
-      const user = User.findOne({ email }).populate("Company");
+      const user = User.findOne({ email }).populate("company");
       return user;
     } catch (error) {
       logger.error(`Error finding user by email: ${error}`);
@@ -24,7 +24,7 @@ export class UserRepository {
 
   async findOneById(id: string) {
     try {
-      const user = User.findById(id).populate("Company");
+      const user = User.findById(id).populate("company");
       return user;
     } catch (error) {
       logger.error(`Error finding user by id: ${error}`);

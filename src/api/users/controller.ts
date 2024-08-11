@@ -8,19 +8,6 @@ class UserController {
   public createUser: RequestHandler = async (req: Request, res: Response) => {
     const { name, email, company, password } = req.body;
 
-    const existingUser = await userService.findOneByEmail(email);
-
-    if (existingUser.success) {
-      return handleServiceResponse(
-        {
-          ...existingUser,
-          message: "User already exists",
-          statusCode: StatusCodes.CONFLICT,
-        },
-        res,
-      );
-    }
-
     const user = new User({
       name,
       email,

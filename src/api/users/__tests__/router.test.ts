@@ -5,11 +5,12 @@ import type { ServiceResponse } from "@/common/models/serviceResponse";
 import { env } from "@/common/utils/envConfig";
 import { app } from "@/server";
 import mongoose from "mongoose";
-import { User } from "../model";
+import { type IUser, User } from "../model";
 
 describe("Create User API endpoints", () => {
   beforeAll(async () => {
     await mongoose.connect(env.MONGODB_URI);
+    await mongoose.connection.db.dropDatabase();
   });
 
   afterEach(async () => {
@@ -20,26 +21,27 @@ describe("Create User API endpoints", () => {
     await mongoose.connection.close();
   });
 
-  it("POST / - success", async () => {
+  it("POST /create - success", async () => {
     const res = await request(app).post("/users/create").send({
       name: "John Doe",
       email: "john@example.com",
       password: "password@123",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
+    const result: ServiceResponse<IUser | null> = res.body;
 
-    expect(res.status).to.equal(StatusCodes.CREATED);
-    expect(result).to.have.property("message", "User created successfully");
-    expect(result.response).to.have.property("_id");
+    expect(res.status).toEqual(StatusCodes.CREATED);
+    expect(result).toHaveProperty("message", "User created successfully");
+    expect(result.response).toHaveProperty("_id");
 
     const user = await User.findById(result.response?._id);
-    expect(user).to.exist;
-    expect(user?.name).to.equal("John Doe");
-    expect(user?.email).to.equal("john@example.com");
+
+    expect(user).toBeDefined();
+    expect(user?.name).toEqual("John Doe");
+    expect(user?.email).toEqual("john@example.com");
   });
 
-  it("POST / - failure: user already exists", async () => {
+  it("POST /create - failure: user already exists", async () => {
     await request(app).post("/users/create").send({
       name: "John Doe",
       email: "john@example.com",
@@ -52,34 +54,34 @@ describe("Create User API endpoints", () => {
       password: "password@123",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
+    const result: ServiceResponse<IUser | null> = res.body;
 
-    expect(res.status).to.equal(StatusCodes.CONFLICT);
-    expect(result).to.have.property("message", "User already exists");
+    expect(res.status).toEqual(StatusCodes.CONFLICT);
+    expect(result).toHaveProperty("message", "User already exists");
   });
 
-  it("POST / - failure: missing password", async () => {
+  it("POST /create - failure: missing password", async () => {
     const res = await request(app).post("/users/create").send({
       name: "John Doe",
       email: "john@example.com",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
+    const result: ServiceResponse<IUser | null> = res.body;
 
-    expect(res.status).to.equal(StatusCodes.BAD_REQUEST);
-    expect(result).to.have.property("message", "password is required");
+    expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+    expect(result).toHaveProperty("message", "password is required");
   });
 
-  it("POST / - failure: invalid email", async () => {
+  it("POST /create - failure: invalid email", async () => {
     const res = await request(app).post("/users/create").send({
       name: "John Doe",
       email: "johnexample.com",
       password: "password@123",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
-    expect(res.status).to.equal(StatusCodes.BAD_REQUEST);
-    expect(result).to.have.property("message", "Invalid email");
+    const result: ServiceResponse<IUser | null> = res.body;
+    expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+    expect(result).toHaveProperty("message", "Invalid email");
   });
 });
 
@@ -96,7 +98,7 @@ describe("Login User API endpoints", () => {
     await mongoose.connection.close();
   });
 
-  it("POST / - success", async () => {
+  it("POST /login - success", async () => {
     await request(app).post("/users/create").send({
       name: "John Doe",
       email: "john@example.com",
@@ -108,22 +110,39 @@ describe("Login User API endpoints", () => {
       password: "password@123",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
+    const result: ServiceResponse<IUser | null> = res.body;
 
-    expect(res.status).to.equal(StatusCodes.OK);
-    expect(result).to.have.property("message", "Login successful");
-    expect(result.response).to.exist;
+    expect(res.status).toEqual(StatusCodes.OK);
+    expect(result).toHaveProperty("message", "Login successful");
+    expect(result.response).toBeDefined();
   });
 
-  it("POST / - failure: user not found", async () => {
+  it("POST /login - failure: missing password", async () => {
+    await request(app).post("/users/create").send({
+      name: "John Doe",
+      email: "john@example.com",
+      password: "password@123",
+    });
+
+    const res = await request(app).post("/users/login").send({
+      email: "john@example.com",
+    });
+
+    const result: ServiceResponse<IUser | null> = res.body;
+
+    expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+    expect(result).toHaveProperty("message", "password is required");
+  });
+
+  it("POST /login - failure: user not found", async () => {
     const res = await request(app).post("/users/login").send({
       email: "john@example.com",
       password: "password@123",
     });
 
-    const result: ServiceResponse<User | null> = res.body;
+    const result: ServiceResponse<IUser | null> = res.body;
 
-    expect(res.status).to.equal(StatusCodes.UNAUTHORIZED);
-    expect(result).to.have.property("message", "Invalid credentials");
+    expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+    expect(result).toHaveProperty("message", "Invalid credentials");
   });
 });

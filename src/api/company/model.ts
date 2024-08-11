@@ -20,9 +20,22 @@ export const Company = model<ICompany>("Company", ICompanySchema);
 export const CompanySchema = z.object({
   _id: z.string(),
   name: z.string(),
-  admins: z.array(z.string().uuid()),
-  users: z.array(z.string().uuid()),
-  workspaces: z.array(z.string().uuid()),
+  admins: z.array(z.string()),
+  users: z.array(z.string()),
+  workspaces: z.array(z.string()),
 });
 
-export const CreateCompanySchema = CompanySchema.omit({ _id: true });
+export const CreateCompanySchema = z.object({
+  body: z.object({
+    name: z.string(),
+    adminId: z.string(),
+  }),
+});
+
+export const UpdateCompanySchema = z.object({
+  body: z.object({
+    companyId: z.string(),
+    userId: z.string(),
+    role: z.string(),
+  }),
+});

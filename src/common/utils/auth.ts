@@ -1,4 +1,4 @@
-import type { User } from "@/api/users/model";
+import type { IUser } from "@/api/users/model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "./envConfig";
@@ -12,6 +12,6 @@ export const comparePasswords = async (password: string, hash: string): Promise<
   return bcrypt.compare(password, hash);
 };
 
-export const generateJWT = (user: User): string => {
+export const generateJWT = (user: IUser): string => {
   return jwt.sign({ id: user._id, email: user.email }, env.JWT_SECRET, { expiresIn: "1h" });
 };
