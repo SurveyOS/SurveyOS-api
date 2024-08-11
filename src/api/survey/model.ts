@@ -11,6 +11,7 @@ export interface ISurvey extends Document {
   type: "email" | "website" | "app";
   version: number;
   _id: Types.ObjectId;
+  isDeleted?: boolean;
 }
 
 // Survey Schema
@@ -22,6 +23,7 @@ const SurveySchema = new Schema<ISurvey>({
   config: { type: Schema.Types.Mixed },
   type: { type: String, enum: ["email", "website", "app"], required: true },
   version: { type: Number, default: 1, required: true },
+  isDeleted: { type: Boolean, default: false },
 });
 
 // survey zod schema
@@ -34,6 +36,7 @@ export const SurveyZodSchema = z.object({
   config: z.record(z.any()),
   type: z.enum(["email", "website", "app"]),
   version: z.number(),
+  isDeleted: z.boolean().optional(),
 })
 
 

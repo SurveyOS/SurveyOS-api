@@ -23,4 +23,8 @@ export class SurveyRepository {
   async getHistory(surveyId: string): Promise<ISurveyHistory[]> {
     return await SurveyHistory.find({ surveyId });
   }
+
+  async delete(surveyId: string): Promise<void> {
+    await Survey.findByIdAndUpdate(surveyId, { isDeleted: true });
+  }
 }

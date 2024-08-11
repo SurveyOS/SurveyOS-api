@@ -98,6 +98,20 @@ class SurveyService {
       throw new InternalServerError("Error retrieving survey");
     }
   }
+
+  async deleteSurvey(surveyId: string): Promise<ServiceResponse<null>> {
+    try {
+      await this.surveyRepository.delete(surveyId);
+      return ServiceResponse.success(
+        "Survey deleted successfully",
+        null,
+        StatusCodes.OK
+      );
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerError("Error deleting survey");
+    }
+  }
 }
 
 export const surveyService = new SurveyService();

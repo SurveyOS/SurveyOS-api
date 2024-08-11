@@ -30,5 +30,57 @@ questionRegistry.registerPath({
 questionRouter.post("/create", validateRequest(CreateQuestionSchema), questionController.createQuestion);
 questionRouter.put("/:id",validateRequest(UpdateQuestionSchema), questionController.updateQuestion);
 questionRouter.post("/copy/:id", validateRequest(UpdateQuestionSchema), questionController.copyQuestion);
+questionRouter.delete("/:id", questionController.deleteQuestion);
+
+questionRegistry.registerPath({
+  method: "put",
+  path: "/question/{id}",
+  tags: ["Question"],
+  parameters: [
+    {
+      name: "id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: createApiResponse(QuestionZodSchema, "Success"),
+});
+
+questionRegistry.registerPath({
+  method: "delete",
+  path: "/question/{id}",
+  tags: ["Question"],
+  parameters: [
+    {
+      name: "id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: createApiResponse(QuestionZodSchema, "Success"),
+});
+
+questionRegistry.registerPath({
+  method: "post",
+  path: "/question/copy/{id}",
+  tags: ["Question"],
+  parameters: [
+    {
+      name: "id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: createApiResponse(QuestionZodSchema, "Success"),
+});
 
 export default questionRouter;

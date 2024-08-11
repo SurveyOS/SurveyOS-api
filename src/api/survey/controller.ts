@@ -28,4 +28,11 @@ export class SurveyController {
     res.status(response.statusCode).json(response);
   }
 
+  static async deleteSurvey(req: Request, res: Response) {
+    const surveyId = req.params.id;
+    const response = await surveyService.deleteSurvey(surveyId);
+    res.status(response.statusCode).json(response);
+  }
+
+
 }

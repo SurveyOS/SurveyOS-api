@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { SurveyController } from "./controller";
+import { SurveyController } from "@/api/survey/controller";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { CreateSurveySchema, SurveyZodSchema, UpdateSurveySchema } from "./model";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
@@ -9,7 +9,7 @@ export const surveyRouter: Router = express.Router();
 export const surveyRegistry = new OpenAPIRegistry();
 export const questionRouter: Router = express.Router();
 
-surveyRegistry.register("Question", SurveyZodSchema);
+surveyRegistry.register("Survey", SurveyZodSchema);
 
 
 
@@ -17,6 +17,7 @@ surveyRouter.post("/create", SurveyController.createSurvey);
 surveyRouter.get("/:id", SurveyController.getSurvey);
 surveyRouter.put("/:id", SurveyController.updateSurvey);
 surveyRouter.get("/:id/history", SurveyController.getSurveyHistory);
+surveyRouter.delete("/:id", SurveyController.deleteSurvey);
 
 surveyRegistry.registerPath({
   method: "post",
@@ -77,4 +78,19 @@ surveyRegistry.registerPath({
   responses: createApiResponse(SurveyZodSchema, "Success"),
 });
 
-export default surveyRouter;
+surveyRegistry.registerPath({
+  method: "delete",
+  path: "/survey/{id}",
+  tags: ["Survey"],
+  parameters: [
+    {
+      name: "id",
+      in: "path",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: createApiResponse(SurveyZodSchema, "Success"),
+});
