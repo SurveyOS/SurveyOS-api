@@ -27,6 +27,6 @@ Database.connect()
     startServer();
   })
   .catch((err) => {
-    logger.error("Failed to connect to the database", err);
+    logger.error(`Failed to connect to the database with ${err}`);
     process.exit(1);
   });

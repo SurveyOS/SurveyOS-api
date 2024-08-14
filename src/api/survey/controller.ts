@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { surveyService } from "./service";
+import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { surveyService } from "./service";
 
 export class SurveyController {
   static async createSurvey(req: Request, res: Response) {
@@ -33,6 +33,4 @@ export class SurveyController {
     const response = await surveyService.deleteSurvey(surveyId);
     res.status(response.statusCode).json(response);
   }
-
-
 }

@@ -1,18 +1,11 @@
+import type { CreateQuestionDto } from "@/api/question/dto";
 // service.ts
-import {
-  QuestionZodSchema,
-  type IQuestion,
-  Question,
-} from "@/api/question/model";
+import { type IQuestion, Question, QuestionZodSchema } from "@/api/question/model";
 import { QuestionRepository } from "@/api/question/repository";
-import {
-  InternalServerError,
-  ValidationError,
-} from "@/common/models/customError";
+import { InternalServerError, ValidationError } from "@/common/models/customError";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
-import { CreateQuestionDto } from "@/api/question/dto";
 
 class QuestionService {
   private questionRepository: QuestionRepository;
@@ -21,9 +14,7 @@ class QuestionService {
     this.questionRepository = repository;
   }
 
-  async create(
-    question: CreateQuestionDto
-  ): Promise<ServiceResponse<IQuestion | null>> {
+  async create(question: CreateQuestionDto): Promise<ServiceResponse<IQuestion | null>> {
     try {
       // validate the question object
       const questionSchema = QuestionZodSchema.parse(question);
@@ -36,11 +27,7 @@ class QuestionService {
       if (!newQuestion) {
         throw new ValidationError("Error creating question");
       }
-      return ServiceResponse.success<IQuestion>(
-        "Question created successfully",
-        newQuestion,
-        StatusCodes.CREATED
-      );
+      return ServiceResponse.success<IQuestion>("Question created successfully", newQuestion, StatusCodes.CREATED);
     } catch (error) {
       const errorMessage = `Error creating question: ${error}`;
       logger.error(errorMessage);
@@ -48,27 +35,17 @@ class QuestionService {
     }
   }
 
-  async update(
-    id: string,
-    question: CreateQuestionDto
-  ): Promise<ServiceResponse<IQuestion | null>> {
+  async update(id: string, question: CreateQuestionDto): Promise<ServiceResponse<IQuestion | null>> {
     try {
       if (!id) {
         throw new ValidationError("Invalid question id");
       }
       const questionPayload = new Question(question);
-      const updatedQuestion = await this.questionRepository.update(
-        id,
-        questionPayload
-      );
+      const updatedQuestion = await this.questionRepository.update(id, questionPayload);
       if (!updatedQuestion) {
         throw new ValidationError("Error updating question");
       }
-      return ServiceResponse.success<IQuestion>(
-        "Question updated successfully",
-        updatedQuestion,
-        StatusCodes.OK
-      );
+      return ServiceResponse.success<IQuestion>("Question updated successfully", updatedQuestion, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error updating question: ${error}`;
       logger.error(errorMessage);
@@ -85,11 +62,7 @@ class QuestionService {
       if (!deletedQuestion) {
         throw new ValidationError("Error deleting question");
       }
-      return ServiceResponse.success<IQuestion>(
-        "Question deleted successfully",
-        deletedQuestion,
-        StatusCodes.OK
-      );
+      return ServiceResponse.success<IQuestion>("Question deleted successfully", deletedQuestion, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error deleting question: ${error}`;
       logger.error(errorMessage);
@@ -110,11 +83,7 @@ class QuestionService {
       if (!newQuestion) {
         throw new ValidationError("Error copying question");
       }
-      return ServiceResponse.success<IQuestion>(
-        "Question copied successfully",
-        newQuestion,
-        StatusCodes.CREATED
-      );
+      return ServiceResponse.success<IQuestion>("Question copied successfully", newQuestion, StatusCodes.CREATED);
     } catch (error) {
       const errorMessage = `Error copying question: ${error}`;
       logger.error(errorMessage);

@@ -1,6 +1,6 @@
-import { Request, Response, RequestHandler } from "express";
-import { Theme } from "./model";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
+import type { Request, RequestHandler, Response } from "express";
+import { Theme } from "./model";
 import { themeService } from "./service";
 
 class ThemeController {

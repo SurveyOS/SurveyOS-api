@@ -16,7 +16,7 @@ userRegistry.register("User", UserSchema);
 
 userRegistry.registerPath({
   method: "post",
-  path: "/users/create",
+  path: "/api/v1/users/create",
   tags: ["User"],
   request: {
     body: {
@@ -34,7 +34,7 @@ userRouter.post("/create", validateRequest(CreateUserSchema), userController.cre
 
 userRegistry.registerPath({
   method: "post",
-  path: "/users/login",
+  path: "/api/v1/users/login",
   tags: ["User"],
   request: {
     body: {

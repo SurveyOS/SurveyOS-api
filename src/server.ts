@@ -4,24 +4,17 @@ import helmet from "helmet";
 import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import questionRoutes  from "@/api/question/router";
-import {surveyRouter} from "@/api/survey/router";
-import {themeRouter} from "@/api/theme/router";
-
-import { errorMiddleware } from "@/common/middleware/errorHandler";
-import { companyRouter } from "@/api/company/router";
-import { healthCheckRouter } from "@/api/health/router";
-import { authRouter, userRouter } from "@/api/users/router";
 import passport from "@/common/config/passport";
+import { errorMiddleware } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 import session from "express-session";
+import router from "./routes";
 
 const logger = pino({ name: "server start" });
 const app: Express = express();
 
-// Set the application to trust the reverse proxy
 app.set("trust proxy", true);
 
 // Middlewares
@@ -45,19 +38,25 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
-app.use("/health-check", healthCheckRouter);
-app.use("/users", userRouter);
-app.use("/question", questionRoutes);
-app.use("/survey", surveyRouter);
-app.use("/theme", themeRouter);
-app.use("/company", companyRouter);
-app.use("/auth", authRouter);
+// To enable securities in HTTP headers
+app.use(helmet());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+
+app.get("/", async (_, res) => res.status(200).send({ msg: "Backend is up and running" }));
+
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain");
+  res.send("User-agent: *\nDisallow: /");
+});
+
+app.use("/api/v1", router);
 
 // Swagger UI
-app.use(openAPIRouter);
+app.use("/api-docs", openAPIRouter);
 
-// Error handlers
+// Error handlers `
 app.use(errorMiddleware);
 
 export { app, logger };

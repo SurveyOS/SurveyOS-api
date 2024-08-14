@@ -1,6 +1,11 @@
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { companyController } from "@/api/company/controller";
-import { CompanySchema, CreateCompanySchema, UpdateCompanySchema } from "@/api/company/model";
+import {
+  CompanySchema,
+  CreateCompanySchema,
+  DeleteUserFromCompanySchema,
+  UpdateCompanySchema,
+} from "@/api/company/model";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -12,7 +17,7 @@ companyRegistry.register("Company", CompanySchema);
 
 companyRegistry.registerPath({
   method: "post",
-  path: "/company/create",
+  path: "/api/v1/company/create",
   tags: ["Company"],
   request: {
     body: {
@@ -28,7 +33,7 @@ companyRegistry.registerPath({
 
 companyRegistry.registerPath({
   method: "put",
-  path: "/company/update/add",
+  path: "/api/v1/company/update/add",
   tags: ["Company"],
   request: {
     body: {
@@ -42,5 +47,39 @@ companyRegistry.registerPath({
   responses: createApiResponse(CompanySchema, "Success"),
 });
 
+companyRegistry.registerPath({
+  method: "get",
+  path: "/api/v1/company/{companyId}",
+  tags: ["Company"],
+  parameters: [
+    {
+      in: "path",
+      name: "companyId",
+      required: true,
+      schema: {
+        type: "string",
+      },
+    },
+  ],
+  responses: createApiResponse(CompanySchema, "Success"),
+});
+
+companyRegistry.registerPath({
+  method: "delete",
+  path: "/api/v1/company/remove",
+  tags: ["Company"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: DeleteUserFromCompanySchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(CompanySchema, "Success"),
+});
+
 companyRouter.post("/create", validateRequest(CreateCompanySchema), companyController.createCompany);
+
 companyRouter.put("/update/add", validateRequest(UpdateCompanySchema), companyController.addUserToCompany);

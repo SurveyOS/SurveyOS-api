@@ -66,26 +66,20 @@ export const UserSchema = z.object({
 });
 
 export const CreateUserSchema = z.object({
-  body: z.object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(8),
-    company: z.string().nullable().optional(),
-  }),
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string().min(8),
+  company: z.string().nullable().optional(),
 });
 
 export const LoginSchema = z.object({
-  body: z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-  }),
+  email: z.string().email(),
+  password: z.string().min(8),
 });
 
 export const GoogleLoginSchema = z.object({
-  body: z.object({
-    googleId: z.string(),
-    email: z.string().email(),
-    name: z.string().optional(),
-    avatar: z.string().optional(),
-  }),
+  googleId: z.string(),
+  email: z.string().email(),
+  name: z.string().optional(),
+  avatar: z.string().optional(),
 });

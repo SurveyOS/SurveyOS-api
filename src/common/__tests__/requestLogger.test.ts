@@ -2,8 +2,8 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 
-import errorHandler from "@/common/middleware/errorHandler";
 import requestLogger from "@/common/middleware/requestLogger";
+import { errorMiddleware } from "../middleware/errorHandler";
 
 describe("Request Logger Middleware", () => {
   const app = express();
@@ -15,7 +15,7 @@ describe("Request Logger Middleware", () => {
     app.get("/error", () => {
       throw new Error("Test error");
     });
-    app.use(errorHandler());
+    app.use(errorMiddleware);
   });
 
   describe("Successful requests", () => {
