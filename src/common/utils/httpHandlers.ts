@@ -14,7 +14,7 @@ export const handleServiceResponse = (
 export const validateRequest =
   (schema: ZodSchema) => (req: Request, res: Response, next: NextFunction) => {
     try {
-      schema.parse({ body: req.body, query: req.query, params: req.params });
+      schema.parse(req.body);
       next();
     } catch (err) {
       const errorMessage = (err as ZodError).errors
