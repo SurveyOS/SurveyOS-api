@@ -4,7 +4,6 @@ import helmet from "helmet";
 import { pino } from "pino";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import passport from "@/common/config/passport";
 import { errorMiddleware } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -34,9 +33,6 @@ app.use(
     saveUninitialized: false,
   }),
 );
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 // To enable securities in HTTP headers
 app.use(helmet());

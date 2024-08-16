@@ -9,18 +9,10 @@ export enum Role {
   Creator = "creator",
   Member = "member",
 }
-
-enum Provider {
-  Google = "google",
-}
-
 export interface IUser extends Document {
   name: string;
   email: string;
-  password?: string;
-  googleId?: string;
-  avatar?: string;
-  provider: Provider;
+  password: string;
   company: Types.ObjectId;
   workspaces: {
     workspace: Types.ObjectId;
@@ -32,9 +24,6 @@ const IUserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: false },
-  googleId: { type: String, unique: false },
-  avatar: { type: String },
-  provider: { type: String, enum: Provider, required: false },
   company: { type: Schema.Types.ObjectId, ref: "Company", required: false },
   workspaces: [
     {
@@ -51,9 +40,6 @@ export const UserSchema = z.object({
   _id: z.string(),
   name: z.string(),
   email: z.string().email(),
-  googleId: z.string().nullable(),
-  avatar: z.string().nullable(),
-  provider: z.nativeEnum(Provider),
   company: z.string().nullable(),
   workspaces: z.array(
     z.object({
@@ -75,11 +61,4 @@ export const CreateUserSchema = z.object({
 export const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-});
-
-export const GoogleLoginSchema = z.object({
-  googleId: z.string(),
-  email: z.string().email(),
-  name: z.string().optional(),
-  avatar: z.string().optional(),
 });
