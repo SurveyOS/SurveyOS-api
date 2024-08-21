@@ -5,4 +5,5 @@ export interface CreateQuestionDto {
   label: string;
   isRequired: boolean;
   validations: string[];
+  surveyId: string;
 }
