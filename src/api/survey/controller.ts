@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { surveyService } from "./service";
 
 export class SurveyController {
@@ -33,4 +34,17 @@ export class SurveyController {
     const response = await surveyService.deleteSurvey(surveyId);
     res.status(response.statusCode).json(response);
   }
+
+  static async createSurveyTemplate(req: Request, res: Response) {
+    const templateResponse = await surveyService.createTemplate(req.body);
+    return handleServiceResponse(templateResponse, res);
+  };
+
+  static async deleteSurveyTemplate(req: Request, res: Response) {
+    const templateId = req.params.id;
+    const templateResponse = await surveyService.deleteTemplate(templateId);
+    return handleServiceResponse(templateResponse, res);
+  }
+
+
 }

@@ -1,6 +1,7 @@
 // repository.ts
 import { logger } from "@/server";
-import { type IQuestion, Question } from "./model";
+import { Question, type IQuestion } from "./model";
+import { CreateQuestionDto } from "./dto"
 
 export class QuestionRepository {
   async create(question: IQuestion) {
@@ -13,7 +14,7 @@ export class QuestionRepository {
     }
   }
 
-  async update(id: string, question: IQuestion) {
+  async update(id: string, question: CreateQuestionDto) {
     try {
       const updatedQuestion = await Question.findByIdAndUpdate(id, question, {
         new: true,

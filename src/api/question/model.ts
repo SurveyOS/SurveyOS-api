@@ -35,7 +35,7 @@ export const QuestionZodSchema = z.object({
   onLoad: z.string().default(""),
   label: z.string(),
   isRequired: z.boolean(),
-  validations: z.array(z.string()),
+  validations: z.array(z.string()).default([]),
   isDeleted: z.boolean().default(false),
 });
 

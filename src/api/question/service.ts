@@ -1,6 +1,10 @@
 import type { CreateQuestionDto } from "@/api/question/dto";
 // service.ts
-import { type IQuestion, Question, QuestionZodSchema } from "@/api/question/model";
+import {
+  type IQuestion,
+  Question,
+  CreateQuestionSchema,
+} from "@/api/question/model";
 import { QuestionRepository } from "@/api/question/repository";
 import { InternalServerError, ValidationError } from "@/common/models/customError";
 import { ServiceResponse } from "@/common/models/serviceResponse";
@@ -17,7 +21,7 @@ class QuestionService {
   async create(question: CreateQuestionDto): Promise<ServiceResponse<IQuestion | null>> {
     try {
       // validate the question object
-      const questionSchema = QuestionZodSchema.parse(question);
+      const questionSchema = CreateQuestionSchema.parse(question);
       // check if questionSchema is valid
       if (!questionSchema) {
         throw new ValidationError("Invalid question object");
@@ -40,8 +44,11 @@ class QuestionService {
       if (!id) {
         throw new ValidationError("Invalid question id");
       }
-      const questionPayload = new Question(question);
-      const updatedQuestion = await this.questionRepository.update(id, questionPayload);
+      // const questionPayload = new Question(question);
+      const updatedQuestion = await this.questionRepository.update(
+        id,
+        question
+      );
       if (!updatedQuestion) {
         throw new ValidationError("Error updating question");
       }
