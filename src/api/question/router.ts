@@ -27,9 +27,9 @@ questionRegistry.registerPath({
   responses: createApiResponse(QuestionZodSchema, "Success"),
 });
 
-questionRouter.post("/create", validateRequest(CreateQuestionSchema), questionController.createQuestion);
-questionRouter.put("/:id",validateRequest(UpdateQuestionSchema), questionController.updateQuestion);
-questionRouter.post("/copy/:id", validateRequest(UpdateQuestionSchema), questionController.copyQuestion);
+questionRouter.post("/create", questionController.createQuestion);
+questionRouter.put("/:id", questionController.updateQuestion);
+questionRouter.post("/copy/:id", questionController.copyQuestion);
 questionRouter.delete("/:id", questionController.deleteQuestion);
 
 questionRegistry.registerPath({

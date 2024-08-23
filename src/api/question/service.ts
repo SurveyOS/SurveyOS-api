@@ -3,6 +3,7 @@ import {
   QuestionZodSchema,
   type IQuestion,
   Question,
+  CreateQuestionSchema,
 } from "@/api/question/model";
 import { QuestionRepository } from "@/api/question/repository";
 import {
@@ -26,7 +27,7 @@ class QuestionService {
   ): Promise<ServiceResponse<IQuestion | null>> {
     try {
       // validate the question object
-      const questionSchema = QuestionZodSchema.parse(question);
+      const questionSchema = CreateQuestionSchema.parse(question);
       // check if questionSchema is valid
       if (!questionSchema) {
         throw new ValidationError("Invalid question object");
@@ -56,10 +57,10 @@ class QuestionService {
       if (!id) {
         throw new ValidationError("Invalid question id");
       }
-      const questionPayload = new Question(question);
+      // const questionPayload = new Question(question);
       const updatedQuestion = await this.questionRepository.update(
         id,
-        questionPayload
+        question
       );
       if (!updatedQuestion) {
         throw new ValidationError("Error updating question");
