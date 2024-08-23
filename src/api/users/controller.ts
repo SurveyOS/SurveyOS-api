@@ -16,7 +16,7 @@ class UserController {
       workspaces: [],
     });
 
-    const newUser = await userService.create(user);
+    const newUser = await userService.create(user, true, true);
 
     return handleServiceResponse(newUser, res);
   };
