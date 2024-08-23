@@ -4,15 +4,23 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { comparePasswords, generateJWT, hashPassword } from "@/common/utils/auth";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
+import { WorkspaceRepository } from "../workspace/repository"
+import { CompanyRepository } from "../company/repository"
+import { Workspace } from "../workspace/model"
+import { Company } from "../company/model"
 
 class UserService {
   private userRepository: UserRepository;
+  private workspaceRepository: WorkspaceRepository;
+  private companyRepository: CompanyRepository;
 
   constructor(repository: UserRepository = new UserRepository()) {
     this.userRepository = repository;
+    this.workspaceRepository = new WorkspaceRepository();
+    this.companyRepository = new CompanyRepository();
   }
 
-  async create(user: IUser): Promise<ServiceResponse<IUser | null>> {
+  async create(user: IUser, createWorkspace=false, createCompany=false): Promise<ServiceResponse<IUser | null>> {
     try {
       const existingUser = await this.findOneByEmail(user.email);
 
@@ -28,6 +36,38 @@ class UserService {
       const newUser = await this.userRepository.create(user);
       if (!newUser) {
         return ServiceResponse.failure("Error creating user", null, StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+
+      if(createCompany) {
+        // Create a company
+        const company = new Company({
+          name: `${user.name}'s company`,
+          users: [],
+          admins: [newUser._id]
+        })
+
+        const newCompany = await this.companyRepository.create(company);
+        if (!newCompany) {
+          return ServiceResponse.failure("Error creating company", null, StatusCodes.INTERNAL_SERVER_ERROR);
+        }
+
+        if(createWorkspace) {
+          // Create workspace
+          const workspace = new Workspace({
+            name: `${user.name}'s workspace`,
+            users: [newUser._id],
+            admins: [newUser._id],
+            company: newCompany
+          })
+          const newWorkspace = await this.workspaceRepository.create(workspace);
+          if (!newWorkspace) {
+            return ServiceResponse.failure("Error creating workspace", null, StatusCodes.INTERNAL_SERVER_ERROR);
+          }
+
+        }
+
+      
+
       }
 
       return ServiceResponse.success<IUser>("User created successfully", newUser, StatusCodes.CREATED);
