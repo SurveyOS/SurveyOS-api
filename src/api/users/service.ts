@@ -4,10 +4,10 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { comparePasswords, generateJWT, hashPassword } from "@/common/utils/auth";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
-import { WorkspaceRepository } from "../workspace/repository"
-import { CompanyRepository } from "../company/repository"
-import { Workspace } from "../workspace/model"
-import { Company } from "../company/model"
+import { Company } from "../company/model";
+import { CompanyRepository } from "../company/repository";
+import { Workspace } from "../workspace/model";
+import { WorkspaceRepository } from "../workspace/repository";
 
 class UserService {
   private userRepository: UserRepository;
@@ -20,7 +20,7 @@ class UserService {
     this.companyRepository = new CompanyRepository();
   }
 
-  async create(user: IUser, createWorkspace=false, createCompany=false): Promise<ServiceResponse<IUser | null>> {
+  async create(user: IUser, createWorkspace = false, createCompany = false): Promise<ServiceResponse<IUser | null>> {
     try {
       const existingUser = await this.findOneByEmail(user.email);
 
@@ -38,36 +38,30 @@ class UserService {
         return ServiceResponse.failure("Error creating user", null, StatusCodes.INTERNAL_SERVER_ERROR);
       }
 
-      if(createCompany) {
-        // Create a company
+      if (createCompany) {
         const company = new Company({
           name: `${user.name}'s company`,
           users: [],
-          admins: [newUser._id]
-        })
+          admins: [newUser._id],
+        });
 
         const newCompany = await this.companyRepository.create(company);
         if (!newCompany) {
           return ServiceResponse.failure("Error creating company", null, StatusCodes.INTERNAL_SERVER_ERROR);
         }
 
-        if(createWorkspace) {
-          // Create workspace
+        if (createWorkspace) {
           const workspace = new Workspace({
             name: `${user.name}'s workspace`,
             users: [newUser._id],
             admins: [newUser._id],
-            company: newCompany
-          })
+            company: newCompany,
+          });
           const newWorkspace = await this.workspaceRepository.create(workspace);
           if (!newWorkspace) {
             return ServiceResponse.failure("Error creating workspace", null, StatusCodes.INTERNAL_SERVER_ERROR);
           }
-
         }
-
-      
-
       }
 
       return ServiceResponse.success<IUser>("User created successfully", newUser, StatusCodes.CREATED);
@@ -93,6 +87,21 @@ class UserService {
     }
   }
 
+  async findOneByEmailWithPassword(email: string): Promise<ServiceResponse<IUser | null>> {
+    try {
+      const user = await this.userRepository.findOneByEmailWithPassword(email);
+      if (!user) {
+        return ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      return ServiceResponse.success<IUser>("User found", user, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error finding user by email with password: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("User not found", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async findOneById(id: string): Promise<ServiceResponse<IUser | null>> {
     try {
       const user = await this.userRepository.findOneById(id);
@@ -110,7 +119,7 @@ class UserService {
 
   async login(email: string, password: string): Promise<ServiceResponse<string | null>> {
     try {
-      const userResponse = await this.findOneByEmail(email);
+      const userResponse = await this.findOneByEmailWithPassword(email);
       if (!userResponse.success || !userResponse.response) {
         return ServiceResponse.failure("Invalid credentials", null, StatusCodes.BAD_REQUEST);
       }
@@ -126,6 +135,22 @@ class UserService {
       const errorMessage = `Error during login: ${error}`;
       logger.error(errorMessage);
       return ServiceResponse.failure("Login failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async refreshToken(id: string): Promise<ServiceResponse<string | null>> {
+    try {
+      const user = await this.findOneById(id);
+      if (!user.success || !user.response) {
+        return ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      const newToken = generateJWT(user.response);
+      return ServiceResponse.success<string>("Token refreshed", newToken, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error refreshing token: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("Token refresh failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

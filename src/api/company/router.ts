@@ -6,6 +6,7 @@ import {
   DeleteUserFromCompanySchema,
   UpdateCompanySchema,
 } from "@/api/company/model";
+import AuthMiddleware from "@/common/middleware/authMiddleware";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -80,6 +81,16 @@ companyRegistry.registerPath({
   responses: createApiResponse(CompanySchema, "Success"),
 });
 
-companyRouter.post("/create", validateRequest(CreateCompanySchema), companyController.createCompany);
+companyRouter.post(
+  "/create",
+  AuthMiddleware.auth,
+  validateRequest(CreateCompanySchema),
+  companyController.createCompany,
+);
 
-companyRouter.put("/update/add", validateRequest(UpdateCompanySchema), companyController.addUserToCompany);
+companyRouter.put(
+  "/update/add",
+  AuthMiddleware.auth,
+  validateRequest(UpdateCompanySchema),
+  companyController.addUserToCompany,
+);

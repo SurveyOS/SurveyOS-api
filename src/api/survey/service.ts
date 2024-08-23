@@ -2,7 +2,7 @@ import { InternalServerError, NotFoundError } from "@/common/models/customError"
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
-import { type ISurvey, type ISurveyHistory, ISurveyTemplate, SurveyHistory } from "./model";
+import { type ISurvey, type ISurveyHistory, type ISurveyTemplate, SurveyHistory } from "./model";
 import { SurveyRepository } from "./repository";
 
 class SurveyService {
@@ -83,20 +83,10 @@ class SurveyService {
     }
   }
 
-  async addQuestion(
-    surveyId: string,
-    questionId: string
-  ): Promise<ServiceResponse<ISurvey | null>> {
+  async addQuestion(surveyId: string, questionId: string): Promise<ServiceResponse<ISurvey | null>> {
     try {
-      const updatedSurvey = await this.surveyRepository.addQuestion(
-        surveyId,
-        questionId
-      );
-      return ServiceResponse.success(
-        "Question added to survey successfully",
-        updatedSurvey,
-        StatusCodes.OK
-      );
+      const updatedSurvey = await this.surveyRepository.addQuestion(surveyId, questionId);
+      return ServiceResponse.success("Question added to survey successfully", updatedSurvey, StatusCodes.OK);
     } catch (error) {
       console.log(error);
       throw new InternalServerError("Error adding question to survey");

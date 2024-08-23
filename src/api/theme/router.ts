@@ -1,3 +1,4 @@
+import AuthMiddleware from "@/common/middleware/authMiddleware";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { Router } from "express";
@@ -11,8 +12,8 @@ export const questionRouter: Router = express.Router();
 
 themeRegistry.register("Theme", ThemeZodSchema);
 
-themeRouter.post("/create", validateRequest(ThemeZodSchema), themeController.createTheme);
-themeRouter.put("/update/:id", validateRequest(ThemeZodSchema), themeController.updateTheme);
+themeRouter.post("/create", AuthMiddleware.auth, validateRequest(ThemeZodSchema), themeController.createTheme);
+themeRouter.put("/update/:id", AuthMiddleware.auth, validateRequest(ThemeZodSchema), themeController.updateTheme);
 
 themeRegistry.registerPath({
   method: "post",

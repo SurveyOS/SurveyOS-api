@@ -1,10 +1,5 @@
 import type { CreateQuestionDto } from "@/api/question/dto";
-// service.ts
-import {
-  type IQuestion,
-  Question,
-  CreateQuestionSchema,
-} from "@/api/question/model";
+import { CreateQuestionSchema, type IQuestion, Question } from "@/api/question/model";
 import { QuestionRepository } from "@/api/question/repository";
 import { InternalServerError, ValidationError } from "@/common/models/customError";
 import { ServiceResponse } from "@/common/models/serviceResponse";
@@ -45,10 +40,7 @@ class QuestionService {
         throw new ValidationError("Invalid question id");
       }
       // const questionPayload = new Question(question);
-      const updatedQuestion = await this.questionRepository.update(
-        id,
-        question
-      );
+      const updatedQuestion = await this.questionRepository.update(id, question);
       if (!updatedQuestion) {
         throw new ValidationError("Error updating question");
       }
