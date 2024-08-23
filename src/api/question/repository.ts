@@ -1,6 +1,6 @@
 // repository.ts
 import { logger } from "@/server";
-import { Question, type IQuestion } from "./model";
+import { type IQuestion, Question } from "./model";
 
 export class QuestionRepository {
   async create(question: IQuestion) {
@@ -27,11 +27,7 @@ export class QuestionRepository {
 
   async delete(id: string) {
     try {
-      const deletedQuestion = await Question.findByIdAndUpdate(
-        id,
-        { isDeleted: true },
-        { new: true }
-      );
+      const deletedQuestion = await Question.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
       return deletedQuestion;
     } catch (error) {
       logger.error(`Error deleting question: ${error}`);

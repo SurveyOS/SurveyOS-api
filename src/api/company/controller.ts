@@ -26,6 +26,22 @@ class CompanyController {
 
     return handleServiceResponse(updatedCompanyResponse, res);
   };
+
+  public removeUserFromCompany: RequestHandler = async (req: Request, res: Response) => {
+    const { companyId, userId } = req.body;
+
+    const updatedCompanyResponse = await companyService.removeUser(companyId, userId);
+
+    return handleServiceResponse(updatedCompanyResponse, res);
+  };
+
+  public getCompany: RequestHandler = async (req: Request, res: Response) => {
+    const { companyId } = req.params;
+
+    const company = await companyService.get(companyId);
+
+    return handleServiceResponse(company, res);
+  };
 }
 
 export const companyController = new CompanyController();

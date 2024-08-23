@@ -15,14 +15,14 @@ class CompanyService {
 
   async create(company: ICompany): Promise<ServiceResponse<ICompany | null>> {
     try {
-      if(!company.admins.length) {
+      if (!company.admins.length) {
         return ServiceResponse.failure("Invalid adminId", null, StatusCodes.BAD_REQUEST);
       }
 
-      if(!company.users.length) {
+      if (!company.users.length) {
         return ServiceResponse.failure("Invalid userId", null, StatusCodes.BAD_REQUEST);
       }
-      
+
       const adminId = company.admins[0]._id.toString();
 
       const existingUser = await userService.findOneById(adminId);
@@ -86,6 +86,50 @@ class CompanyService {
       const errorMessage = `Error updating company: ${error}`;
       logger.error(errorMessage);
       return ServiceResponse.failure("Company not updated", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async removeUser(companyId: string, userId: string): Promise<ServiceResponse<ICompany | null>> {
+    try {
+      const existingCompany = await this.companyRepository.findOneById(companyId);
+
+      if (!existingCompany) {
+        return ServiceResponse.failure("Company not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      const company = new Company({
+        ...existingCompany,
+        users: existingCompany.users.filter((user) => !user.equals(userId)),
+        admins: existingCompany.admins.filter((admin) => !admin.equals(userId)),
+      });
+
+      const updatedCompany = await this.companyRepository.update(companyId, company);
+
+      if (!updatedCompany) {
+        return ServiceResponse.failure("Error updating company", null, StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+
+      return ServiceResponse.success<ICompany>("User removed successfully", updatedCompany, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error removing user from company: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("User not removed", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async get(id: string): Promise<ServiceResponse<ICompany | null>> {
+    try {
+      const company = await this.companyRepository.findOneById(id);
+
+      if (!company) {
+        return ServiceResponse.failure("Company not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      return ServiceResponse.success<ICompany>("Company retrieved successfully", company, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error retrieving company: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("Company not retrieved", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

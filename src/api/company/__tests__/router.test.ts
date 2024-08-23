@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 
+import { User } from "@/api/users/model";
 import type { ServiceResponse } from "@/common/models/serviceResponse";
 import { env } from "@/common/utils/envConfig";
 import { app } from "@/server";
 import mongoose from "mongoose";
 import { Company, type ICompany } from "../model";
-import { User } from "@/api/users/model";
 
 describe("Create Company API endpoints", () => {
   beforeAll(async () => {
@@ -228,7 +228,6 @@ describe("Add user to Company API endpoints", () => {
       email: "janen@example.com",
       password: "password@123",
     });
-
 
     const res = await request(app).post("/company/update/add").send({
       userId: user.body.response._id,

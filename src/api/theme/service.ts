@@ -1,9 +1,9 @@
 import { InternalServerError } from "@/common/models/customError";
-import { ITheme } from "./model";
-import { ThemeRepository } from "./repository";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
+import type { ITheme } from "./model";
+import { ThemeRepository } from "./repository";
 
 class ThemeService {
   private themeRepository: ThemeRepository;
@@ -19,11 +19,7 @@ class ThemeService {
         throw new InternalServerError("Error creating theme");
       }
 
-      return ServiceResponse.success<ITheme>(
-        "Theme created successfully",
-        newTheme,
-        StatusCodes.CREATED
-      );
+      return ServiceResponse.success<ITheme>("Theme created successfully", newTheme, StatusCodes.CREATED);
     } catch (error) {
       const errorMessage = `Error creating theme: ${error}`;
       logger.error(errorMessage);
@@ -31,21 +27,14 @@ class ThemeService {
     }
   }
 
-  async update(
-    id: string,
-    theme: Partial<ITheme>
-  ): Promise<ServiceResponse<ITheme | null>> {
+  async update(id: string, theme: Partial<ITheme>): Promise<ServiceResponse<ITheme | null>> {
     try {
       const updatedTheme = await this.themeRepository.update(id, theme);
       if (!updatedTheme) {
         throw new InternalServerError("Error updating theme");
       }
 
-      return ServiceResponse.success<ITheme>(
-        "Theme updated successfully",
-        updatedTheme,
-        StatusCodes.OK
-      );
+      return ServiceResponse.success<ITheme>("Theme updated successfully", updatedTheme, StatusCodes.OK);
     } catch (error) {
       const errorMessage = `Error updating theme: ${error}`;
       logger.error(errorMessage);

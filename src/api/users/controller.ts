@@ -28,14 +28,6 @@ class UserController {
 
     return handleServiceResponse(loginResponse, res);
   };
-
-  public googleSignUpOrLogin: RequestHandler = async (req: Request, res: Response) => {
-    const { googleId, email, name, avatar } = req.body;
-
-    const googleLoginResponse = await userService.googleSignUpOrLogin(googleId, email, name, avatar);
-
-    return handleServiceResponse(googleLoginResponse, res);
-  };
 }
 
 export const userController = new UserController();

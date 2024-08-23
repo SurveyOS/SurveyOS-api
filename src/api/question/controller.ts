@@ -1,19 +1,15 @@
 // controller.ts
 import { Question } from "@/api/question/model";
+import { ValidationError } from "@/common/models/customError";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import type { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { questionService } from "./service";
-import { ValidationError } from "@/common/models/customError";
 
 class QuestionController {
-  public createQuestion: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
-    const { type, postSubmit, onLoad, label, isRequired, validations } =
-      req.body;
+  public createQuestion: RequestHandler = async (req: Request, res: Response) => {
+    const { type, postSubmit, onLoad, label, isRequired, validations } = req.body;
 
     const newQuestion = await questionService.create({
       type,
@@ -27,20 +23,9 @@ class QuestionController {
     return handleServiceResponse(newQuestion, res);
   };
 
-  public updateQuestion: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
+  public updateQuestion: RequestHandler = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const {
-      questionId,
-      type,
-      postSubmit,
-      onLoad,
-      label,
-      isRequired,
-      validations,
-    } = req.body;
+    const { questionId, type, postSubmit, onLoad, label, isRequired, validations } = req.body;
 
     const question = new Question({
       questionId,
@@ -57,10 +42,7 @@ class QuestionController {
     return handleServiceResponse(updatedQuestion, res);
   };
 
-  public deleteQuestion: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
+  public deleteQuestion: RequestHandler = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const deletedQuestion = await questionService.delete(id);

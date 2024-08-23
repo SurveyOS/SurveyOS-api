@@ -1,4 +1,4 @@
-import { Survey, ISurvey, SurveyHistory, ISurveyHistory } from "./model";
+import { type ISurvey, type ISurveyHistory, Survey, SurveyHistory } from "./model";
 
 export class SurveyRepository {
   async create(surveyData: ISurvey): Promise<ISurvey> {

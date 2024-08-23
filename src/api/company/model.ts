@@ -26,16 +26,17 @@ export const CompanySchema = z.object({
 });
 
 export const CreateCompanySchema = z.object({
-  body: z.object({
-    name: z.string(),
-    adminId: z.string(),
-  }),
+  name: z.string(),
+  adminId: z.string(),
 });
 
 export const UpdateCompanySchema = z.object({
-  body: z.object({
-    companyId: z.string(),
-    userId: z.string(),
-    role: z.string(),
-  }),
+  companyId: z.string(),
+  userId: z.string(),
+  role: z.string(),
+});
+
+export const DeleteUserFromCompanySchema = z.object({
+  companyId: z.string(),
+  userId: z.string(),
 });

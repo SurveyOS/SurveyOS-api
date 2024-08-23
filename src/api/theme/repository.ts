@@ -1,5 +1,5 @@
-import { Theme, ThemeHistory, ITheme, IThemeHistory } from './model';
-import { logger } from '@/server';
+import { logger } from "@/server";
+import { type ITheme, IThemeHistory, Theme, ThemeHistory } from "./model";
 
 export class ThemeRepository {
   async create(theme: ITheme): Promise<ITheme | null> {
@@ -35,7 +35,7 @@ export class ThemeRepository {
       const updatedTheme = await Theme.findOneAndUpdate(
         { _id: id },
         { ...theme, $inc: { version: 1 }, updatedAt: new Date() },
-        { new: true }
+        { new: true },
       );
       return updatedTheme;
     } catch (error) {
