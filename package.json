@@ -9,7 +9,6 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch --clear-screen=false src/index.ts | pino-pretty",
-    "preinstall": "npx only-allow yarn",
     "build": "tsup",
     "start": "node dist/index.js",
     "clean": "rimraf dist coverage",

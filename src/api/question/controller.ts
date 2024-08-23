@@ -23,7 +23,6 @@ class QuestionController {
       label,
       isRequired,
       validations,
-      surveyId
     })
     // add the question to the survey
     //@ts-ignore
