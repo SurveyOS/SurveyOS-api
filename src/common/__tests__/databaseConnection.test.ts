@@ -1,9 +1,9 @@
 import express, { type Express } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import errorHandler from "@/common/middleware/errorHandler";
+import { errorMiddleware } from "@/common/middleware/errorHandler";
 import { env } from "@/common/utils/envConfig";
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 
 describe("Database Connection", () => {
   let app: Express;
@@ -11,7 +11,7 @@ describe("Database Connection", () => {
   beforeAll(() => {
     app = express();
 
-    app.use(errorHandler());
+    app.use(errorMiddleware);
     app.use("*", (req, res) => res.status(StatusCodes.NOT_FOUND).send("Not Found"));
   });
 

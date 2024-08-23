@@ -75,10 +75,6 @@ class UserService {
         return ServiceResponse.failure("Invalid credentials", null, StatusCodes.BAD_REQUEST);
       }
 
-      if (!userResponse.response.password) {
-        return ServiceResponse.failure("Login with google to continue", null, StatusCodes.BAD_REQUEST);
-      }
-
       const isPasswordValid = await comparePasswords(password, userResponse.response.password);
       if (!isPasswordValid) {
         return ServiceResponse.failure("Invalid credentials", null, StatusCodes.BAD_REQUEST);
@@ -90,37 +86,6 @@ class UserService {
       const errorMessage = `Error during login: ${error}`;
       logger.error(errorMessage);
       return ServiceResponse.failure("Login failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  async googleSignUpOrLogin(
-    googleId: string,
-    email: string,
-    name?: string,
-    avatar?: string,
-  ): Promise<ServiceResponse<IUser | null>> {
-    try {
-      let userResponse = await this.findOneByEmail(email);
-      if (!userResponse.success) {
-        const newUser = new User({
-          email,
-          googleId,
-          name,
-          avatar,
-          provider: "google",
-          workspaces: [],
-        });
-        userResponse = await this.create(newUser);
-        if (!userResponse.success) {
-          return ServiceResponse.failure("Google sign-up failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
-        }
-      }
-
-      return userResponse;
-    } catch (error) {
-      const errorMessage = `Error during Google sign-up/login: ${error}`;
-      logger.error(errorMessage);
-      return ServiceResponse.failure("Google sign-up/login failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

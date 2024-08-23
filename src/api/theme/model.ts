@@ -1,4 +1,4 @@
-import { Document, Schema, model, Types, UpdateQuery } from "mongoose";
+import { type Document, Schema, Types, type UpdateQuery, model } from "mongoose";
 import { z } from "zod";
 
 // Interface for Theme
@@ -87,10 +87,7 @@ const ThemeHistorySchema = new Schema<IThemeHistory>({
   companyId: { type: Types.ObjectId, ref: "Company", default: null },
 });
 
-export const ThemeHistory = model<IThemeHistory>(
-  "ThemeHistory",
-  ThemeHistorySchema
-);
+export const ThemeHistory = model<IThemeHistory>("ThemeHistory", ThemeHistorySchema);
 
 // Zod schema for validation
 export const ThemeZodSchema = z.object({

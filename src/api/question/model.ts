@@ -21,7 +21,7 @@ const QuestionSchema = new Schema<IQuestion>({
   label: { type: String, required: true },
   isRequired: { type: Boolean, required: true },
   validations: { type: [String], default: [] },
-    isDeleted: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
 });
 
 // Create the Mongoose model
@@ -29,7 +29,7 @@ export const Question = model<IQuestion>("Question", QuestionSchema);
 
 // Define Zod schema for validation
 export const QuestionZodSchema = z.object({
-    _id: z.string(),
+  _id: z.string(),
   type: z.string(),
   postSubmit: z.string().default(""),
   onLoad: z.string().default(""),
@@ -38,7 +38,6 @@ export const QuestionZodSchema = z.object({
   validations: z.array(z.string()).default([]),
   isDeleted: z.boolean().default(false),
 });
-
 
 // Schema for updates
 export const UpdateQuestionSchema = QuestionZodSchema.omit({ _id: true });

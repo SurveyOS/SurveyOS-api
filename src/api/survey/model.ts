@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-import {z} from "zod"
+import { type Document, Schema, type Types, model } from "mongoose";
+import { z } from "zod";
 
 // Survey Interface
 export interface ISurvey extends Document {
@@ -37,8 +37,7 @@ export const SurveyZodSchema = z.object({
   type: z.enum(["email", "website", "app"]),
   version: z.number(),
   isDeleted: z.boolean().optional(),
-})
-
+});
 
 export const Survey = model<ISurvey>("Survey", SurveySchema);
 

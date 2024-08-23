@@ -1,8 +1,7 @@
+import { errorMiddleware } from "@/common/middleware/errorHandler";
 import express, { type Express } from "express";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
-
-import errorHandler from "@/common/middleware/errorHandler";
 
 describe("Error Handler Middleware", () => {
   let app: Express;
@@ -18,7 +17,7 @@ describe("Error Handler Middleware", () => {
       next(error);
     });
 
-    app.use(errorHandler());
+    app.use(errorMiddleware);
     app.use("*", (req, res) => res.status(StatusCodes.NOT_FOUND).send("Not Found"));
   });
 

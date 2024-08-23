@@ -1,7 +1,7 @@
 // router.ts
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { questionController } from "@/api/question/controller";
-import { QuestionZodSchema, CreateQuestionSchema, UpdateQuestionSchema } from "@/api/question/model";
+import { CreateQuestionSchema, QuestionZodSchema, UpdateQuestionSchema } from "@/api/question/model";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -13,7 +13,7 @@ questionRegistry.register("Question", QuestionZodSchema);
 
 questionRegistry.registerPath({
   method: "post",
-  path: "/question/create",
+  path: "/api/v1/question/create",
   tags: ["Question"],
   request: {
     body: {
@@ -34,7 +34,7 @@ questionRouter.delete("/:id", questionController.deleteQuestion);
 
 questionRegistry.registerPath({
   method: "put",
-  path: "/question/{id}",
+  path: "/api/v1/question/{id}",
   tags: ["Question"],
   parameters: [
     {
@@ -51,7 +51,7 @@ questionRegistry.registerPath({
 
 questionRegistry.registerPath({
   method: "delete",
-  path: "/question/{id}",
+  path: "/api/v1/question/{id}",
   tags: ["Question"],
   parameters: [
     {
@@ -68,7 +68,7 @@ questionRegistry.registerPath({
 
 questionRegistry.registerPath({
   method: "post",
-  path: "/question/copy/{id}",
+  path: "/api/v1/question/copy/{id}",
   tags: ["Question"],
   parameters: [
     {

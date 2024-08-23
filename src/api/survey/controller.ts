@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { surveyService } from "./service";
+import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
+import { surveyService } from "./service";
 
 export class SurveyController {
   static async createSurvey(req: Request, res: Response) {

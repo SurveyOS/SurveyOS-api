@@ -31,10 +31,7 @@ class QuestionController {
     return handleServiceResponse(newQuestion, res);
   };
 
-  public updateQuestion: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
+  public updateQuestion: RequestHandler = async (req: Request, res: Response) => {
     const { id } = req.params;
     const {
       type,
@@ -61,10 +58,7 @@ class QuestionController {
     return handleServiceResponse(updatedQuestion, res);
   };
 
-  public deleteQuestion: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
+  public deleteQuestion: RequestHandler = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const deletedQuestion = await questionService.delete(id);
