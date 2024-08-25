@@ -14,7 +14,7 @@ class UserController {
       email,
       password,
       company,
-      workspaces: []
+      workspaces: [],
     });
 
     const newUser = await userService.create(user, true, true, role);

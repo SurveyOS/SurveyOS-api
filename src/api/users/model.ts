@@ -20,7 +20,7 @@ export interface IUser extends Document {
   }[];
 }
 
-export interface LoginResponse  {
+export interface LoginResponse {
   token: string;
   redirectUrl: string;
 }

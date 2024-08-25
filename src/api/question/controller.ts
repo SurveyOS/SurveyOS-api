@@ -1,6 +1,10 @@
+// controller.ts
+import { IQuestion, Question } from "@/api/question/model";
 import { ValidationError } from "@/common/models/customError";
+import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import type { Request, RequestHandler, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { surveyService } from "../survey/service";
 import { questionService } from "./service";
 

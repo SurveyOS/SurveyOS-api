@@ -1,5 +1,5 @@
 import { Role } from "@/api/users/model";
-import { type Document, Schema, type Types, model, ObjectId } from "mongoose";
+import { type Document, ObjectId, Schema, type Types, model } from "mongoose";
 import { z } from "zod";
 
 export interface IWorkspace extends Document {
