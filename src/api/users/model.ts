@@ -20,6 +20,11 @@ export interface IUser extends Document {
   }[];
 }
 
+export interface LoginResponse  {
+  token: string;
+  redirectUrl: string;
+}
+
 const IUserSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
