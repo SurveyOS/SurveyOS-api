@@ -7,7 +7,7 @@ export class WorkspaceRepository {
   async create(workspace: IWorkspace) {
     try {
       const newWorkspace = await Workspace.create(workspace);
-      User.findByIdAndUpdate(workspace.users[0].user, {
+      await User.findByIdAndUpdate(workspace.users[0].user, {
         $push: {
           workspaces: {
             workspace: newWorkspace._id,
