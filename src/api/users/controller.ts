@@ -6,17 +6,17 @@ import { userService } from "./service";
 
 class UserController {
   public createUser: RequestHandler = async (req: Request, res: Response) => {
-    const { name, email, company, password } = req.body;
+    const { name, email, company, password, role } = req.body;
 
     const user = new User({
       name,
       email,
       password,
       company,
-      workspaces: [],
+      workspaces: []
     });
 
-    const newUser = await userService.create(user, true, true);
+    const newUser = await userService.create(user, true, true, role);
 
     return handleServiceResponse(newUser, res);
   };

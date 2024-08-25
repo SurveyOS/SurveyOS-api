@@ -1,4 +1,4 @@
-import { type IUser, User } from "@/api/users/model";
+import { type IUser, User, Role } from "@/api/users/model";
 import { UserRepository } from "@/api/users/repository";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { comparePasswords, generateJWT, hashPassword } from "@/common/utils/auth";
@@ -20,7 +20,7 @@ class UserService {
     this.companyRepository = new CompanyRepository();
   }
 
-  async create(user: IUser, createWorkspace=false, createCompany=false): Promise<ServiceResponse<IUser | null>> {
+  async create(user: IUser, createWorkspace=false, createCompany=false, role=Role.Admin): Promise<ServiceResponse<IUser | null>> {
     try {
       const existingUser = await this.findOneByEmail(user.email);
 
@@ -55,7 +55,10 @@ class UserService {
           // Create workspace
           const workspace = new Workspace({
             name: `${user.name}'s workspace`,
-            users: [newUser._id],
+            users: [{
+              user: newUser._id,
+              role
+            }],
             admins: [newUser._id],
             company: newCompany
           })
