@@ -1,4 +1,3 @@
-// model.ts
 import { type Document, Schema, type Types, model } from "mongoose";
 import { z } from "zod";
 

@@ -8,10 +8,10 @@ import {
 } from "@/common/utils/auth";
 import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
-import { WorkspaceRepository } from "../workspace/repository";
-import { CompanyRepository } from "../company/repository";
-import { IWorkspace, Workspace } from "../workspace/model";
 import { Company } from "../company/model";
+import { CompanyRepository } from "../company/repository";
+import { Workspace } from "../workspace/model";
+import { WorkspaceRepository } from "../workspace/repository";
 
 class UserService {
   private userRepository: UserRepository;
@@ -148,6 +148,21 @@ class UserService {
     }
   }
 
+  async findOneByEmailWithPassword(email: string): Promise<ServiceResponse<IUser | null>> {
+    try {
+      const user = await this.userRepository.findOneByEmailWithPassword(email);
+      if (!user) {
+        return ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      return ServiceResponse.success<IUser>("User found", user, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error finding user by email with password: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("User not found", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   async findOneById(id: string): Promise<ServiceResponse<IUser | null>> {
     try {
       const user = await this.userRepository.findOneById(id);
@@ -176,7 +191,7 @@ class UserService {
     password: string
   ): Promise<ServiceResponse<LoginResponse | null>> {
     try {
-      const userResponse = await this.findOneByEmail(email);
+      const userResponse = await this.findOneByEmailWithPassword(email);
       if (!userResponse.success || !userResponse.response) {
         return ServiceResponse.failure(
           "Invalid credentials",
@@ -222,6 +237,22 @@ class UserService {
         null,
         StatusCodes.INTERNAL_SERVER_ERROR
       );
+    }
+  }
+
+  async refreshToken(id: string): Promise<ServiceResponse<string | null>> {
+    try {
+      const user = await this.findOneById(id);
+      if (!user.success || !user.response) {
+        return ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      const newToken = generateJWT(user.response);
+      return ServiceResponse.success<string>("Token refreshed", newToken, StatusCodes.OK);
+    } catch (error) {
+      const errorMessage = `Error refreshing token: ${error}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("Token refresh failed", null, StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
 }

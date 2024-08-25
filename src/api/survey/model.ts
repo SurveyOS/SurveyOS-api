@@ -70,7 +70,7 @@ const SurveyHistorySchema = new Schema<ISurveyHistory>({
 export const SurveyHistory = model<ISurveyHistory>("SurveyHistory", SurveyHistorySchema);
 
 // SurveyTemplate Schema
-export interface ISurveyTemplate extends Omit<ISurvey, 'workspaceId' | 'updatedAt'> {
+export interface ISurveyTemplate extends Omit<ISurvey, "workspaceId" | "updatedAt"> {
   tags: string[];
 }
 
@@ -80,12 +80,12 @@ const SurveyTemplateSchema = new Schema<ISurveyTemplate>({
   questions: [{ type: Schema.Types.ObjectId, ref: "Question", required: true }],
   theme: { type: Schema.Types.ObjectId, ref: "Theme", required: true },
   language: { type: String, required: true },
-  config: { type: Schema.Types.Mixed, default: {} }
+  config: { type: Schema.Types.Mixed, default: {} },
 });
 
 export const SurveyTemplate = model<ISurveyTemplate>("SurveyTemplate", SurveyTemplateSchema);
-export const CreateSurveySchema = SurveyZodSchema.omit({_id: true})
-export const UpdateSurveySchema = SurveyZodSchema.omit({_id: true})
+export const CreateSurveySchema = SurveyZodSchema.omit({ _id: true });
+export const UpdateSurveySchema = SurveyZodSchema.omit({ _id: true });
 export const DeleteSurveySchema = z.object({
   _id: z.string().uuid(),
 });

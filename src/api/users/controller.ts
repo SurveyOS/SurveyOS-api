@@ -1,4 +1,5 @@
 import { User } from "@/api/users/model";
+import { ServiceResponse } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import type { Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -27,6 +28,30 @@ class UserController {
     const loginResponse = await userService.login(email, password);
 
     return handleServiceResponse(loginResponse, res);
+  };
+
+  public me: RequestHandler = async (req: Request, res: Response) => {
+    const user = req.user;
+
+    if (!user) {
+      return handleServiceResponse(ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND), res);
+    }
+
+    const userResponse = await userService.findOneById(user.id);
+
+    return handleServiceResponse(userResponse, res);
+  };
+
+  public refreshToken: RequestHandler = async (req: Request, res: Response) => {
+    const user = req.user;
+
+    if (!user) {
+      return handleServiceResponse(ServiceResponse.failure("User not found", null, StatusCodes.NOT_FOUND), res);
+    }
+
+    const refreshTokenResponse = await userService.refreshToken(user.id);
+
+    return handleServiceResponse(refreshTokenResponse, res);
   };
 }
 

@@ -1,9 +1,9 @@
 import {
+  type ISurvey,
+  type ISurveyHistory,
+  type ISurveyTemplate,
   Survey,
-  ISurvey,
   SurveyHistory,
-  ISurveyHistory,
-  ISurveyTemplate,
   SurveyTemplate,
 } from "./model";
 
@@ -13,10 +13,7 @@ export class SurveyRepository {
     return await survey.save();
   }
 
-  async addQuestion(
-    surveyId: string,
-    questionId: string
-  ): Promise<ISurvey | null> {
+  async addQuestion(surveyId: string, questionId: string): Promise<ISurvey | null> {
     const survey = await Survey.findByIdAndUpdate(
       surveyId,
       {
@@ -24,7 +21,7 @@ export class SurveyRepository {
           questions: questionId,
         },
       },
-      { new: true }
+      { new: true },
     );
     return survey;
   }
@@ -33,19 +30,14 @@ export class SurveyRepository {
     return await Survey.findById(surveyId);
   }
 
-  async update(
-    surveyId: string,
-    updateData: Partial<ISurvey>
-  ): Promise<ISurvey | null> {
+  async update(surveyId: string, updateData: Partial<ISurvey>): Promise<ISurvey | null> {
     const survey = await Survey.findByIdAndUpdate(surveyId, updateData, {
       new: true,
     });
     return survey;
   }
 
-  async saveHistory(
-    surveyHistoryData: ISurveyHistory
-  ): Promise<ISurveyHistory> {
+  async saveHistory(surveyHistoryData: ISurveyHistory): Promise<ISurveyHistory> {
     const surveyHistory = new SurveyHistory(surveyHistoryData);
     return await surveyHistory.save();
   }

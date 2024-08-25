@@ -1,8 +1,7 @@
-// router.ts
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { questionController } from "@/api/question/controller";
-import { CreateQuestionSchema, QuestionZodSchema, UpdateQuestionSchema } from "@/api/question/model";
-import { validateRequest } from "@/common/utils/httpHandlers";
+import { CreateQuestionSchema, QuestionZodSchema } from "@/api/question/model";
+import AuthMiddleware from "@/common/middleware/authMiddleware";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
 
@@ -27,10 +26,10 @@ questionRegistry.registerPath({
   responses: createApiResponse(QuestionZodSchema, "Success"),
 });
 
-questionRouter.post("/create", questionController.createQuestion);
-questionRouter.put("/:id", questionController.updateQuestion);
-questionRouter.post("/copy/:id", questionController.copyQuestion);
-questionRouter.delete("/:id", questionController.deleteQuestion);
+questionRouter.post("/create", AuthMiddleware.auth, questionController.createQuestion);
+questionRouter.put("/:id", AuthMiddleware.auth, questionController.updateQuestion);
+questionRouter.post("/copy/:id", AuthMiddleware.auth, questionController.copyQuestion);
+questionRouter.delete("/:id", AuthMiddleware.auth, questionController.deleteQuestion);
 
 questionRegistry.registerPath({
   method: "put",

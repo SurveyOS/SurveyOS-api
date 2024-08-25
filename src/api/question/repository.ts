@@ -1,7 +1,6 @@
-// repository.ts
 import { logger } from "@/server";
-import { Question, type IQuestion } from "./model";
-import { CreateQuestionDto } from "./dto"
+import type { CreateQuestionDto } from "./dto";
+import { type IQuestion, Question } from "./model";
 
 export class QuestionRepository {
   async create(question: IQuestion) {

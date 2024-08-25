@@ -1,4 +1,5 @@
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+import AuthMiddleware from "@/common/middleware/authMiddleware";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { type Router } from "express";
@@ -86,10 +87,20 @@ workspaceRegistry.registerPath({
   responses: createApiResponse(WorkspaceSchema, "Success"),
 });
 
-workspaceRouter.post("/create", validateRequest(CreateWorkspaceSchema), workspaceController.createWorkspace);
+workspaceRouter.post(
+  "/create",
+  AuthMiddleware.auth,
+  validateRequest(CreateWorkspaceSchema),
+  workspaceController.createWorkspace,
+);
 
-workspaceRouter.get("/:companyId", workspaceController.getWorkspace);
+workspaceRouter.get("/:companyId", AuthMiddleware.auth, workspaceController.getWorkspace);
 
-workspaceRouter.put("/update/:id", validateRequest(WorkspaceSchema), workspaceController.updateUserInWorkspace);
+workspaceRouter.put(
+  "/update/:id",
+  AuthMiddleware.auth,
+  validateRequest(WorkspaceSchema),
+  workspaceController.updateUserInWorkspace,
+);
 
-workspaceRouter.delete("/delete/:companyId", workspaceController.deleteWorkspace);
+workspaceRouter.delete("/delete/:companyId", AuthMiddleware.auth, workspaceController.deleteWorkspace);
