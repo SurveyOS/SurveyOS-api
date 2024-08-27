@@ -69,18 +69,11 @@ class UserService {
             admins: [newUser._id],
             company: newCompany,
           });
+
           const newWorkspace = await this.workspaceRepository.create(workspace);
           if (!newWorkspace) {
             return ServiceResponse.failure("Error creating workspace", null, StatusCodes.INTERNAL_SERVER_ERROR);
           }
-          newUser.workspaces.push({
-            workspace: newWorkspace._id as Types.ObjectId,
-            role,
-          });
-          await newUser.save();
-
-          newCompany.workspaces.push(newWorkspace._id as Types.ObjectId);
-          await newCompany.save();
         }
       }
 
@@ -151,15 +144,14 @@ class UserService {
 
       const token = generateJWT(userResponse.response);
 
-      /**
-       * get the user's workspaces
-       * if the user has only one workspace, redirect to that workspace
-       * if the user has multiple workspaces, redirect to the first workspace
-       */
-      const redirectUrl = `/c/${userResponse.response.company._id}/w/${userResponse.response.workspaces[0].workspace._id}/survey/list`;
+      const companyId = String(userResponse.response?.company?._id);
+
+      const workspaceId = String(userResponse.response?.workspaces[0]?.workspace._id);
+
       const response = {
         token,
-        redirectUrl,
+        companyId,
+        workspaceId,
       };
       return ServiceResponse.success<LoginResponse>("Login successful", response, StatusCodes.OK);
     } catch (error) {

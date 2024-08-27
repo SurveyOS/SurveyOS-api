@@ -11,7 +11,7 @@ import { Company, type ICompany } from "../model";
 describe("Create Company API endpoints", () => {
   beforeAll(async () => {
     await mongoose.connect(env.MONGODB_URI);
-    await mongoose.connection.db.dropDatabase();
+    await mongoose.connection.db?.dropDatabase();
   });
 
   afterEach(async () => {

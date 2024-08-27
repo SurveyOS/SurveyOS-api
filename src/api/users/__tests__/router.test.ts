@@ -10,7 +10,7 @@ import { type IUser, User } from "../model";
 describe("Create User API endpoints", () => {
   beforeAll(async () => {
     await mongoose.connect(env.MONGODB_URI);
-    await mongoose.connection.db.dropDatabase();
+    await mongoose.connection.db?.dropDatabase();
   });
 
   afterEach(async () => {
