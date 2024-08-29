@@ -27,7 +27,8 @@ export class SurveyRepository {
   }
 
   async findById(surveyId: string): Promise<ISurvey | null> {
-    return await Survey.findById(surveyId);
+    // populate questions
+    return await Survey.findById(surveyId).populate("questions");
   }
 
   async update(surveyId: string, updateData: Partial<ISurvey>): Promise<ISurvey | null> {

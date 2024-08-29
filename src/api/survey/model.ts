@@ -18,7 +18,7 @@ export interface ISurvey extends Document {
 const SurveySchema = new Schema<ISurvey>({
   workspaceId: { type: Schema.Types.ObjectId, ref: "Workspace", required: true },
   questions: [{ type: Schema.Types.ObjectId, ref: "Question" }],
-  theme: { type: Schema.Types.ObjectId, ref: "Theme" },
+  theme: { type: Schema.Types.ObjectId, ref: "Theme", default: null },
   language: { type: String, required: true },
   config: { type: Schema.Types.Mixed },
   type: { type: String, enum: ["email", "website", "app"], required: true },
