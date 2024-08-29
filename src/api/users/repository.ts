@@ -24,7 +24,7 @@ export class UserRepository {
 
   async findOneByEmailWithPassword(email: string) {
     try {
-      const user = User.findOne({ email }).select("-__v");
+      const user = User.findOne({ email }).select("-__v").populate("company").populate("workspaces.workspace");
 
       return user;
     } catch (error) {
@@ -35,7 +35,7 @@ export class UserRepository {
 
   async findOneById(id: string) {
     try {
-      const user = User.findById(id).select("-password").select("-__v").populate("company");
+      const user = User.findById(id).select("-password").select("-__v").populate("company").populate("workspaces.workspace");
       return user;
     } catch (error) {
       logger.error(`Error finding user by id: ${error}`);

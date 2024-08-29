@@ -22,7 +22,8 @@ export interface IUser extends Document {
 
 export interface LoginResponse {
   token: string;
-  redirectUrl: string;
+  companyId: string;
+  workspaceId: string;
 }
 
 const IUserSchema = new Schema<IUser>({
