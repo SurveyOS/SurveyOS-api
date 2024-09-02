@@ -10,6 +10,8 @@ export interface IQuestion extends Document {
   isRequired: boolean;
   validations: string[];
   isDeleted: boolean;
+  settings: any;
+  
 }
 
 // Define the Mongoose schema
