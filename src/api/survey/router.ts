@@ -14,7 +14,7 @@ surveyRegistry.register("Survey", SurveyZodSchema);
 
 surveyRouter.post("/create", AuthMiddleware.auth, SurveyController.createSurvey);
 surveyRouter.get("/:id", AuthMiddleware.auth, SurveyController.getSurvey);
-surveyRouter.put("/:id", AuthMiddleware.auth, SurveyController.updateSurvey);
+surveyRouter.put("/:id", SurveyController.updateSurvey);
 surveyRouter.get("/:id/history", AuthMiddleware.auth, SurveyController.getSurveyHistory);
 surveyRouter.delete("/:id", AuthMiddleware.auth, SurveyController.deleteSurvey);
 surveyRouter.post("/template/create", AuthMiddleware.auth, SurveyController.createSurveyTemplate);

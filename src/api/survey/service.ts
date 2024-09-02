@@ -4,12 +4,16 @@ import { logger } from "@/server";
 import { StatusCodes } from "http-status-codes";
 import { type ISurvey, type ISurveyHistory, type ISurveyTemplate, SurveyHistory } from "./model";
 import { SurveyRepository } from "./repository";
+import { QuestionRepository } from "../question/repository"
 
 class SurveyService {
   private surveyRepository: SurveyRepository;
+  private questionRepository: QuestionRepository;
 
   constructor(repository: SurveyRepository = new SurveyRepository()) {
     this.surveyRepository = repository;
+    this.questionRepository = new QuestionRepository();
+
   }
 
   async createSurvey(surveyData: ISurvey): Promise<ServiceResponse<ISurvey>> {
